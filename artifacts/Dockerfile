@@ -34,11 +34,12 @@ useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${cont
 && mkdir -p /var/run/nginx /var/tmp/nginx \
 && chown -R ${container_user}:${container_user} /usr/share/nginx /var/run/nginx /var/tmp/nginx
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
+# Set environment variables immediately after installation
 ENV MAVEN_HOME /usr/local/maven
 ENV PATH $MAVEN_HOME/bin:$PATH
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # set working directory for the user
 WORKDIR /home/${container_user}
