@@ -34,10 +34,12 @@ useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${cont
 && mkdir -p /var/run/nginx /var/tmp/nginx \
 && chown -R ${container_user}:${container_user} /usr/share/nginx /var/run/nginx /var/tmp/nginx
 
-# Set environment variables immediately after installation
-ENV MAVEN_HOME /usr/local/maven
-ENV PATH $MAVEN_HOME/bin:$PATH
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+# Discover the actual JDK path (arch-independent) and create a stable symlink
+RUN ln -sf $(dirname $(dirname $(readlink -f $(which java)))) /usr/local/java-home
+
+ENV MAVEN_HOME=/usr/local/maven
+ENV JAVA_HOME=/usr/local/java-home
+ENV PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
