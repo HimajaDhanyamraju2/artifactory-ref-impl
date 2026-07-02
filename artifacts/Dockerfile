@@ -1,5 +1,14 @@
 FROM nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305
 
+ARG SOURCE
+ARG COMMIT_HASH
+ARG COMMIT_ID
+ARG BUILD_TIME
+LABEL source=${SOURCE}
+LABEL commit_hash=${COMMIT_HASH}
+LABEL commit_id=${COMMIT_ID}
+LABEL build_time=${BUILD_TIME}
+
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user=mosip
 
@@ -19,17 +28,20 @@ apt-get update -y && \
 apt-get install -y --no-install-recommends unzip wget zip openjdk-11-jdk && \
 groupadd -g ${container_user_gid} ${container_user_group} &&\
 rm -rf /var/lib/apt/lists/* &&\
-wget https://dlcdn.apache.org/maven/maven-3/3.8.9/binaries/apache-maven-3.8.9-bin.tar.gz &&\
-tar -xzf apache-maven-3.8.9-bin.tar.gz && mv apache-maven-3.8.9 /usr/local/maven && rm apache-maven-3.8.9-bin.tar.gz &&\
+wget https://dlcdn.apache.org/maven/maven-3/3.9.15/binaries/apache-maven-3.9.15-bin.tar.gz &&\
+tar -xzf apache-maven-3.9.15-bin.tar.gz && mv apache-maven-3.9.15 /usr/local/maven && rm apache-maven-3.9.15-bin.tar.gz &&\
 useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
 && mkdir -p /var/run/nginx /var/tmp/nginx \
 && chown -R ${container_user}:${container_user} /usr/share/nginx /var/run/nginx /var/tmp/nginx
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
+# Discover the actual JDK path (arch-independent) and create a stable symlink
+RUN ln -sf $(dirname $(dirname $(readlink -f $(which java)))) /usr/local/java-home
 
-ENV MAVEN_HOME /usr/local/maven
-ENV PATH $MAVEN_HOME/bin:$PATH
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV MAVEN_HOME=/usr/local/maven
+ENV JAVA_HOME=/usr/local/java-home
+ENV PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH
+
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # set working directory for the user
 WORKDIR /home/${container_user}
