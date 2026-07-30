@@ -28,8 +28,8 @@ apt-get update -y && \
 apt-get install -y --no-install-recommends unzip wget zip openjdk-11-jdk && \
 groupadd -g ${container_user_gid} ${container_user_group} &&\
 rm -rf /var/lib/apt/lists/* &&\
-wget https://dlcdn.apache.org/maven/maven-3/3.9.15/binaries/apache-maven-3.9.15-bin.tar.gz &&\
-tar -xzf apache-maven-3.9.15-bin.tar.gz && mv apache-maven-3.9.15 /usr/local/maven && rm apache-maven-3.9.15-bin.tar.gz &&\
+wget https://dlcdn.apache.org/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.tar.gz &&\
+tar -xzf apache-maven-3.9.16-bin.tar.gz && mv apache-maven-3.9.16 /usr/local/maven && rm apache-maven-3.9.16-bin.tar.gz &&\
 useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
 && mkdir -p /var/run/nginx /var/tmp/nginx \
 && chown -R ${container_user}:${container_user} /usr/share/nginx /var/run/nginx /var/tmp/nginx
@@ -165,7 +165,7 @@ COPY /src/i18n/esignet-i18n-bundle/*  ${work_dir}/esignet-i18n-bundle/
 
 COPY /src/theme/esignet-theme/* ${work_dir}/esignet-theme/
 
-COPY /src/jre/zulu11.41.23-ca-fx-jre11.0.8-win_x64.zip ${regclient_jar_path}/zulu11.41.23-ca-fx-jre11.0.8-win_x64.zip
+COPY /src/jre/zulu11.86.21-ca-fx-jre11.0.30-win_x64.zip ${regclient_jar_path}/zulu11.86.21-ca-fx-jre11.0.30-win_x64.zip
 
 COPY /src/icu4j/* ${icu4j_jar_path}/
 
