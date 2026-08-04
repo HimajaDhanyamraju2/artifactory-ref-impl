@@ -168,6 +168,8 @@ COPY /src/impl/* ${custom_zip_path}/
 
 COPY /src/i18n/esignet-i18n-bundle/*  ${work_dir}/esignet-i18n-bundle/
 
+COPY /src/i18n/resident-i18n-bundle/*  ${work_dir}/resident-i18n-bundle/
+
 COPY /src/theme/esignet-theme/* ${work_dir}/esignet-theme/
 
 COPY /src/jre/zulu11.86.21-ca-fx-jre11.0.30-win_x64.zip ${regclient_jar_path}/zulu11.86.21-ca-fx-jre11.0.30-win_x64.zip
