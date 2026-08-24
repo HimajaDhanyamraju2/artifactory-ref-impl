@@ -118,6 +118,9 @@ ENV master_template_path=${base_path}/libs-release-local/master-templates
 # environment variable for child auth filter jar path
 ENV child_auth_filter_jar_path=${base_path}/libs-release-local/io/mosip/authentication/authentication-ref-impl
 
+# environment variable for biochq SDK jar path
+ENV biochq_zip_path=${base_path}/libs-release-local/sdk/biochq
+
 # environment variable for script path
 ENV scripts_path=/home/mosip/scripts
 
@@ -133,6 +136,8 @@ RUN mkdir -p ${biosdk_client_zip_path}/biosdk-client ${demosdk_zip_path}/demosdk
 COPY /src/sdk/biosdk/install.sh ${biosdk_client_zip_path}/biosdk-client/
 
 COPY /src/sdk/demosdk/install.sh ${demosdk_zip_path}/demosdk/
+
+COPY /src/sdk/biochq/* ${biochq_zip_path}/
 
 COPY /src/deployment/docker/id-authentication/* ${ida_sh_path}/
 
