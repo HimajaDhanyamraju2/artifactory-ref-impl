@@ -286,6 +286,10 @@ RUN set -eux; \
         "${work_dir}/esignet-i18n-bundle"; \
     \
     copy_optional_dir \
+        /tmp/artifact-src/i18n/resident-i18n-bundle \
+        "${work_dir}/resident-i18n-bundle"; \
+    \
+    copy_optional_dir \
         /tmp/artifact-src/theme/esignet-theme \
         "${work_dir}/esignet-theme"; \
     \
