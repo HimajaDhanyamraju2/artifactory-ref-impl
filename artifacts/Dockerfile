@@ -31,28 +31,28 @@ ARG TEMURIN_JDK_SHA256_ARM64=f27033e6f7523c1b0b2565a78e9c0e0abe5596a854ce00ca04e
 
 # install packages and create user
 RUN apt-get update -y && \
-apt-get install -y gnupg2 && \
-apt-get update -y && \
-apt-get install -y --no-install-recommends unzip wget zip && \
-groupadd -g ${container_user_gid} ${container_user_group} && \
-rm -rf /var/lib/apt/lists/* && \
-wget https://dlcdn.apache.org/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.tar.gz && \
-tar -xzf apache-maven-3.9.16-bin.tar.gz && \
-mv apache-maven-3.9.16 /usr/local/maven && \
-rm apache-maven-3.9.16-bin.tar.gz && \
-case "${TARGETARCH}" in \
-  amd64) jdk_arch=x64; jdk_sha256=${TEMURIN_JDK_SHA256_AMD64} ;; \
-  arm64) jdk_arch=aarch64; jdk_sha256=${TEMURIN_JDK_SHA256_ARM64} ;; \
-  *) echo "Unsupported TARGETARCH: ${TARGETARCH}" >&2 && exit 1 ;; \
-esac && \
-wget "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_${jdk_arch}_linux_hotspot_11.0.32.1_1.tar.gz" -O openjdk-11.tar.gz && \
-echo "${jdk_sha256}  openjdk-11.tar.gz" | sha256sum -c - && \
-tar -xzf openjdk-11.tar.gz && \
-mv jdk-11.0.32.1+1 /usr/local/java-11 && \
-rm openjdk-11.tar.gz && \
-useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} && \
-mkdir -p /var/run/nginx /var/tmp/nginx && \
-chown -R ${container_user}:${container_user} /usr/share/nginx /var/run/nginx /var/tmp/nginx
+    apt-get install -y gnupg2 && \
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends unzip wget zip && \
+    groupadd -g ${container_user_gid} ${container_user_group} && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget https://dlcdn.apache.org/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.tar.gz && \
+    tar -xzf apache-maven-3.9.16-bin.tar.gz && \
+    mv apache-maven-3.9.16 /usr/local/maven && \
+    rm apache-maven-3.9.16-bin.tar.gz && \
+    case "${TARGETARCH}" in \
+      amd64) jdk_arch=x64; jdk_sha256=${TEMURIN_JDK_SHA256_AMD64} ;; \
+      arm64) jdk_arch=aarch64; jdk_sha256=${TEMURIN_JDK_SHA256_ARM64} ;; \
+      *) echo "Unsupported TARGETARCH: ${TARGETARCH}" >&2 && exit 1 ;; \
+    esac && \
+    wget "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_${jdk_arch}_linux_hotspot_11.0.32.1_1.tar.gz" -O openjdk-11.tar.gz && \
+    echo "${jdk_sha256}  openjdk-11.tar.gz" | sha256sum -c - && \
+    tar -xzf openjdk-11.tar.gz && \
+    mv jdk-11.0.32.1+1 /usr/local/java-11 && \
+    rm openjdk-11.tar.gz && \
+    useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} && \
+    mkdir -p /var/run/nginx /var/tmp/nginx && \
+    chown -R ${container_user}:${container_user} /usr/share/nginx /var/run/nginx /var/tmp/nginx
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
