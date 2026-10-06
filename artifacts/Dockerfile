@@ -91,19 +91,19 @@ ENV sdk_path=${base_path}/libs-release-local/mock-sdk/1.1.5/
 # JPEG SDK path
 ENV jpeg_sdk_path=${base_path}/libs-release-local/jpeg-mock-sdk/1.1.5/
 
-# Image compressor jar
+# Image compressor jar path
 ENV image_compressor_path=${base_path}/libs-release-local/compressor/
 
 # Kernel jars
 ENV kernel_jar_path=${base_path}/libs-release-local/io/mosip/kernel
 
-# Regproc reprocessor cache jar
+# Regproc reprocessor cache jar path
 ENV test_jar_path=${base_path}/libs-release-local/io/mosip/testing/
 
-# Ref id object validator jar
+# Ref ID object validator jar path
 ENV idobject_jar_path=${base_path}/libs-release-local/io/mosip/kernel/kernel-ref-idobjectvalidator
 
-# Regproc auth jar
+# Regproc auth jar path
 ENV regproc_jar_path=${base_path}/libs-release-local/io/mosip/kernel/kernel-auth-adapter
 
 # ICU4J
@@ -186,9 +186,6 @@ COPY /src/deployment/docker/id-authentication/* \
 
 # HSM client
 COPY /src/hsm/client.zip \
-    ${hsm_client_path}/
-
-COPY /src/hsm/client-21.zip \
     ${hsm_client_path}/
 
 # MOSIP plugins
