@@ -1,4 +1,4 @@
-FROM nginx@sha256:af296b188c7b7df99ba960ca614439c99cb7cf252ed7bbc23e90cfda59092305
+FROM nginx:stable-bookworm
 
 ARG SOURCE
 ARG COMMIT_HASH
@@ -43,7 +43,7 @@ RUN rm -rf /var/lib/apt/lists/* && \
         /var/tmp/nginx && \
     rm -rf /var/lib/apt/lists/*
 
-# Create architecture-independent JAVA_HOME
+# Architecture-independent JAVA_HOME
 RUN JAVA_PATH="$(dirname "$(dirname "$(readlink -f "$(which java)")")")" && \
     ln -s "${JAVA_PATH}" /opt/java-home
 
@@ -53,98 +53,44 @@ ENV MAVEN_HOME=/usr/local/maven
 ENV JAVA_HOME=/opt/java-home
 ENV PATH="${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PATH}"
 
-# Set working directory
 WORKDIR /home/${container_user}
 
 ENV work_dir=/home/${container_user}
 
-# Base path
 ENV base_path=/usr/share/nginx/html/artifactory
 
-# Biosdk client Zip path
 ENV biosdk_client_zip_path=${base_path}/libs-release-local/biosdk/mock/0.9
-
-# Demosdk Zip path
 ENV demosdk_zip_path=${base_path}/libs-release-local/demosdk/default/
-
-# Biosdk lib Zip path
 ENV biosdk_lib_zip_path=${base_path}/libs-release-local/biosdk/
-
-# JPEG SDK lib path
 ENV jpegsdk_lib_zip_path=${base_path}/libs-release-local/jpeg-sdk/
-
-# Cache Provider Jar path
 ENV cache_path=${base_path}/libs-release-local/cache
-
-# IDA shell scripts path
 ENV ida_sh_path=${base_path}/libs-release-local/deployment/docker/id-authentication
-
-# HSM client path
 ENV hsm_client_path=${base_path}/libs-release-local/hsm
-
-# MOSIP plugins zip path
 ENV mosip_plugins_zip_path=${base_path}/libs-release-local/mosip-plugins
-
-# SDK jar path
 ENV sdk_path=${base_path}/libs-release-local/mock-sdk/1.1.5/
-
-# JPEG SDK path
 ENV jpeg_sdk_path=${base_path}/libs-release-local/jpeg-mock-sdk/1.1.5/
-
-# Image compressor jar path
 ENV image_compressor_path=${base_path}/libs-release-local/compressor/
-
-# Kernel jars
 ENV kernel_jar_path=${base_path}/libs-release-local/io/mosip/kernel
-
-# Regproc reprocessor cache jar path
 ENV test_jar_path=${base_path}/libs-release-local/io/mosip/testing/
-
-# Ref ID object validator jar path
 ENV idobject_jar_path=${base_path}/libs-release-local/io/mosip/kernel/kernel-ref-idobjectvalidator
-
-# Regproc auth jar path
 ENV regproc_jar_path=${base_path}/libs-release-local/io/mosip/kernel/kernel-auth-adapter
-
-# ICU4J
 ENV icu4j_jar_path=${base_path}/libs-release-local/icu4j
-
-# i18n
 ENV i18n_zip_path=${base_path}/libs-release-local/i18n
-
-# Theme
 ENV theme_zip_path=${base_path}/libs-release-local/theme
-
-# Image
 ENV image_zip_path=${base_path}/libs-release-local/image
-
-# IDP auth wrapper
 ENV idp_auth_wrapper_lib_zip_path=${base_path}/libs-release-local/idp/idp-auth-wrapper
-
-# Certify plugins
 ENV certify_plugin_zip_path=${base_path}/libs-release-local/certify
-
-# eSignet wrapper
 ENV esignet_wrapper_lib_zip_path=${base_path}/libs-release-local/esignet
-
-# ClamAV dependency
 ENV clamav_path=${base_path}/libs-release-local/clamav
-
 ENV regclient_jar_path=${base_path}/libs-release-local
-
 ENV master_template_path=${base_path}/libs-release-local/master-templates
-
-# Child auth filter jar
 ENV child_auth_filter_jar_path=${base_path}/libs-release-local/io/mosip/authentication/authentication-ref-impl
-
-# Script path
 ENV scripts_path=/home/mosip/scripts
 
-# Versions
 ENV version=1.2.1-SNAPSHOT
 ENV idp_auth_wrapper_version=0.0.1-SNAPSHOT
 
-# Create all required directories
+# Create required directories
 RUN mkdir -p \
     ${biosdk_client_zip_path}/biosdk-client \
     ${demosdk_zip_path}/demosdk \
@@ -174,7 +120,7 @@ RUN mkdir -p \
     ${esignet_wrapper_lib_zip_path}/esignet-wrapper \
     ${certify_plugin_zip_path}/certify-plugin
 
-# Copy SDK files
+# SDK files
 COPY /src/sdk/biosdk/install.sh \
     ${biosdk_client_zip_path}/biosdk-client/
 
@@ -218,23 +164,18 @@ COPY /src/i18n/pmp-i18n-bundle/* \
 COPY /src/i18n/pre-registration-i18n-bundle/* \
     ${work_dir}/pre-registration-i18n-bundle/
 
-# Master templates
 COPY /src/master-templates/* \
     ${work_dir}/master-templates/
 
-# IDP
 COPY /src/i18n/idp-i18n-bundle/* \
     ${work_dir}/idp-i18n-bundle/
 
-# OIDC demo
 COPY /src/i18n/oidc-demo-i18n-bundle/* \
     ${work_dir}/oidc-demo-i18n-bundle/
 
-# Mock relying party
 COPY /src/i18n/mock-relying-party-i18n-bundle/* \
     ${work_dir}/mock-relying-party-i18n-bundle/
 
-# eSignet
 COPY /src/i18n/esignet-i18n-bundle/* \
     ${work_dir}/esignet-i18n-bundle/
 
@@ -244,7 +185,6 @@ COPY /src/theme/esignet-theme/* \
 COPY /src/image/esignet-image/* \
     ${work_dir}/esignet-image/
 
-# eSignet signup
 COPY /src/image/esignet-signup-image/* \
     ${work_dir}/esignet-signup-image/
 
@@ -273,12 +213,12 @@ COPY ./configure.sh \
 COPY pom.xml \
     ${work_dir}/
 
-# Resolve Maven dependencies and build
+# Maven build
 RUN cd ${work_dir} && \
     mvn dependency:resolve && \
     mvn clean install
 
-# Run configuration script
+# Configure artifacts
 RUN bash ${work_dir}/configure.sh
 
 # Change nginx port from 80 to 8080
@@ -288,14 +228,13 @@ RUN sed -i \
     -e 's/80;/8080;/' \
     /etc/nginx/conf.d/default.conf
 
-# Ensure required files belong to mosip user
+# Permissions
 RUN chown -R ${container_user}:${container_user} \
     /home/${container_user} \
     /usr/share/nginx \
     /var/run/nginx \
     /var/tmp/nginx
 
-# Run container as non-root MOSIP user
 USER ${container_user_uid}:${container_user_gid}
 
 EXPOSE 8080
