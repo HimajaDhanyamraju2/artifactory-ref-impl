@@ -494,8 +494,17 @@
             "btnTxt": "Ok"
         },
         "statuscheckFailed":"Failed",
-        "statuscheckCompleted":"Completed"
-
+        "statuscheckCompleted":"Completed",
+        "statuscheckInProgress": "In Progress",
+        "search": "Search",
+        "timeline": "Processing Timeline",
+        "stages": "Stages",
+        "lastUpdated": "Last Updated",
+        "downloadCard": "Download Card",
+        "downloading": "Downloading...",
+        "downloadSuccess": "Card downloaded successfully",
+        "downloadError": "Unable to download the card. Please try again later.",
+        "close": "Close"
     },
     "packet-upload":{
       "header":"Packet Upload",

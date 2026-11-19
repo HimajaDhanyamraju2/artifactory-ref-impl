@@ -504,8 +504,17 @@
       "btnTxt": "Ok"
     },
     "statuscheckFailed": "Falhou",
-    "statuscheckCompleted": "Concluído"
-	
+    "statuscheckCompleted": "Concluído",
+    "statuscheckInProgress": "Em Andamento",
+    "search": "Pesquisar",
+    "timeline": "Cronologia do Processamento",
+    "stages": "Etapas",
+    "lastUpdated": "Última Atualização",
+    "downloadCard": "Descarregar Cartão",
+    "downloading": "A descarregar...",
+    "downloadSuccess": "Cartão descarregado com sucesso",
+    "downloadError": "Não foi possível descarregar o cartão. Tente novamente mais tarde.",
+    "close": "Fechar"
   },
   "packet-upload": {
     "header": "Upload de Pacote",
